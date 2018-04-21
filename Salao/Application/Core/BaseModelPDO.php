@@ -234,98 +234,64 @@ inner join funcionarios as D on D.id = A.cod_profissional where A.cod_user = 1
 
 
 
-/**
-* Função recebe por parametro tabela e faz busca no banco na tabela recebida por parametro
-* @access public 
-* @param $array
-* @return $result
-*/
-    public function LogradouroJoin($city)
+
+    public function FuncionariosUnit($id = null)
     {
-        $city = strtoupper($city);
-        $city = preg_replace('/(%20)+/', ' ',$city);
-        $city = preg_replace('/%20/ui', ' ',$city);
-  
-        $query = "SELECT A.cep as cep , A.logradouro_ as sam , A.bairro_ as bairro , B.bg_004_system_states_city_ as Estado
-        from {$this->table} as A Inner Join bg_004_system_cities as B on A.id_cidade = B.id Where A.logradouro_ ilike ? ";
+        $query = "SELECT F.nome as nome ,F.id as id, U.nome as Unidade   
+        FROM {$this->table} as F  Inner join unidade as U on F.cod_unidade = U.id 
+        where U.id = ?  order by F.id DESC ";
         $stmt = $this->pdo->prepare($query); 
-        $stmt->execute(array("%$city%"));   
+        $stmt->execute(array("$id") );
         $result = $stmt->fetchAll();
         $stmt->closeCursor();
-        return json_encode( $result);
+        return $result;
     }
 
 
-
-//-------------------- método para fazer join nas tabelas e buscar pelo cep----------------------------------------------------------------
-/**
-* Função recebe por parametro tabela e faz busca no banco na tabela recebida por parametro
-* @access public 
-* @param $array
-* @return $result
-*/
-    public function CepJoin($ceps)
-    {   
-        $cep = CleanWord::cep($ceps);
-
-            $query = "SELECT A.cep as cep , A.logradouro_ as sam , A.bairro_ as bairro , B.bg_004_system_states_city_ as Estado , C.ddd as DDD 
-            from {$this->table} as A Inner Join bg_004_system_cities as B on A.id_cidade = B.id Inner Join bg_005_system_ddd as C on C.city = B.bg_004_system_states_city_
-             Where A.cep = :cep ";
-            $stmt = $this->pdo->prepare($query); 
-            $stmt->bindValue(":cep", $cep);
-            $stmt->execute();
-            $result = $stmt->fetchAll();
-            $stmt->closeCursor();
-            return json_encode( $result);
-
-    }
-
-//-------------------- método para fazer join nas tabelas e buscar pelo Cidade ------------------------------------------------------------
-
-
-//-------------------- método para fazer join nas tabelas e buscar pelo logradouro---------------------------------------------------------
-/**
-* Função recebe por parametro tabela e faz busca no banco na tabela recebida por parametro
-* @access public 
-* @param $array
-* @return $result
-*/
-    public function cityJoin($city)
-    {
-        $city = strtoupper($city);
-        $city = preg_replace('/(%20)+/', ' ',$city);
-        $city = preg_replace('/%20/ui', ' ',$city);
-
-        $query = "SELECT * from {$this->table} as A Inner Join bg_004_system_cities as B on A.id_cidade = B.id Where B.bg_004_system_states_city_ ilike ? ";
+    public function AgendaFunc($id = null , $limit = 60){
+        $query = "SELECT A.id,A.hora_entrada as Entrada ,A.hora_saida as Saida ,A.dia_semana as Dia,A.dia_mes as Data 
+        FROM {$this->table} A LEFT JOIN funcionarios F ON A.cod_func = F.id 
+        WHERE dia_mes >= curdate() and F.id = ?
+        ORDER BY dia_mes ASC LIMIT  $limit";
         $stmt = $this->pdo->prepare($query); 
-        $stmt->execute(array("%$city%"));
+        $stmt->execute(array("$id") );
         $result = $stmt->fetchAll();
         $stmt->closeCursor();
-        return json_encode( $result);
+        return $result;
     }
-//--------------------- método para busca na tabela pelo cargo ----------------------------------------------------------------------------
-/**
-* Função recebe por parametro tabela e faz busca no banco na tabela recebida por parametro
-* @access public 
-* @param $array
-* @return $result
-*/
-    public function getCargos($var)
-    {   
-        $var = strtoupper($var);
-        $var = preg_replace('/(%20)+/', ' ',$var);
-        $var = preg_replace('/%20/ui', ' ',$var);
 
-        $query = "SELECT A.description , A.active as Ativo  FROM {$this->table} as A where description ilike ? ";
+
+    public function JoinPost()
+    {
+        $query = "SELECT * FROM {$this->table} as A  Inner join users as B on A.cod_user = B.id  order by A.id desc  ";
         $stmt = $this->pdo->prepare($query); 
-        $stmt->execute(array("$var%")); 
-        $result = $stmt->fetchAll();  
+        $stmt->execute();
+        $result = $stmt->fetchAll();
         $stmt->closeCursor();
-        return json_encode( $result);
+        return $result;
     }
 
-//-----------------------------------------------------------------------------------------------------------------------
+    public function FindAgenda($idFunc, $date){
+        $query = "SELECT * FROM agenda where cod_func=:cod AND dia_mes=:dia ";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindValue(":cod", $idFunc);
+        $stmt->bindValue(":dia", $date);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        $stmt->closeCursor();
+        return $result;
+    }
 
+    public function FindAgendamentos($id)
+    {
+        $query = "SELECT * FROM agendamento WHERE cod_agenda= ? order by hora_ini asc";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(array("$id"));
+        $result = $stmt->fetchAll();
+        $stmt->closeCursor();
+        return $result;
+    }
+ 
 
 }
 

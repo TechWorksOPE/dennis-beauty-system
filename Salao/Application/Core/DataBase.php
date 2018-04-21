@@ -16,7 +16,7 @@ class DataBase
 		//$conf = include_once __DIR__ . '/../App/database.php';
 
 		$host = 'localhost'; // ou 127.0.0.1
-		$db = 'salao2';
+		$db = 'salao';
 		$user = 'root';
 		$pass = '456321123Pe@';		
 		

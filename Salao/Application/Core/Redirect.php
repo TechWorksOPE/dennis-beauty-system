@@ -5,11 +5,13 @@ namespace Core;
 
 class Redirect
 {
-    public static function route($url, $with = [])
+
+    public static function route($url = '/', $with = [])
     {
-        if (count($with) > 0)
+        if (count($with) > 0  )
             foreach ($with as $key => $value)
                 Session::set($key, $value);
-        return header("location:$url");
+         return header("location:$url");   
+        
     }
 }

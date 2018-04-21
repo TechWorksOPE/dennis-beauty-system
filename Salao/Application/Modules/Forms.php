@@ -4,18 +4,20 @@
 namespace Modules;
 
 use Core\Container;
-
+use Core\Session;
 class Forms
 {
     protected $especialidades; 
     protected $Funcionarios;
     protected $servicos;
+    protected $unidade;
  
     public function __construct()
     {
         $this->especialidades   =   Container::getModel("Especialidades");
         $this->Funcionarios     =   Container::getModel("Funcionarios");
         $this->servicos         =   Container::getModel("Servico");
+        $this->unidade          =   Container::getModel("Unidade");
     }
 
 // login de autenticaação não grava nada só faz validação
@@ -92,6 +94,30 @@ class Forms
 
 		";
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // criar usuarios
@@ -454,10 +480,209 @@ class Forms
 
 
 
+
+
+
+//criar funcionário
+    public  function FuncEdit($funcData)
+    {
+        $datanascimento = date("d-m-Y ", strtotime( $funcData->data_nascimento ) );
+        //$dataService->id
+        $units = $this->unidade->All();
+        $selecUnit = "";
+
+        foreach ($units as $unit )
+        {            
+            $selecUnit .= " <option value=\"$unit->id\"> $unit->nome </option> ";
+        }
+
+//        $especialidades = $this->especialidades->All();
+        //$select = "";
+
+  //      foreach ($especialidades as $especialidade )
+      //  {            
+        //    $select .= " <option value=\"$especialidade->id\"> $especialidade->title </option> ";
+    //    }
+
+        return 
+        "       
+            <div class=\"col-md-10 col-sm-2 col-md-offset-1 col-sm-offset-0\">
+                <div class=\"card\">
+
+                    <form action=\"/update/$funcData->id/Funcionarios\" method=\"post\" accept-charset=\"utf-8\" class=\"form-horizontal\" >
+                        
+
+                        <div class=\"card-header card-header-text\" data-background-color=\"rose\">
+                            <h4 class=\"card-title\">Cadastrar Funcionário</h4>
+                        </div>
+
+                        <div class=\"card-content\">
+
+                            <div class=\"row\">
+                                
+                                <label class=\"col-sm-2 label-on-left\">Nome</label>
+                                <div class=\"col-sm-8\">
+                                    <div class=\"form-group label-floating is-empty\">
+                                        <input type=\"text\" class=\"form-control\" name=\"nome\"  value=\"$funcData->nome\" placeholder=\" Nome Completo \"  />
+                                    </div>
+                                </div>
+                            
+                            </div>
+
+                            <div class=\"row\">
+
+                                <label class=\"col-sm-2 label-on-left\">Cpf</label>
+                                <div class=\"col-sm-8\">
+                                    <div class=\"form-group label-floating is-empty\">
+                                        <input type=\"text\" class=\"form-control\" name=\"cpf\" value=\"$funcData->cpf\" placeholder=\"ex : xxx.xxx.xxx-xx  \" />
+                                    </div>
+                                </div>
+                           
+                            </div>".
+                        
+
+
+/*                            <div class=\"row\">
+                                
+                                <label class=\"col-sm-2 label-on-left\">Especialidade</label>
+
+                                <div class=\"col-lg-8 col-md-6 col-sm-3\">
+                                    <select name=\"cod_especialidade\" class=\"selectpicker\" data-style=\"select-with-transition\" multiple title=\" corte\" data-size=\"7\">".
+                                        
+//                                        $select 
+                                    "</select>
+                                </div>
+                            </div>
+*/            
+
+                            "<div class=\"row\">
+                                
+                                <label class=\"col-sm-2 label-on-left\">Unidade</label>
+
+                                <div class=\"col-lg-8 col-md-6 col-sm-3\">
+                                    <select name=\"cod_unidade\" class=\"selectpicker\" data-style=\"select-with-transition\"  data-size=\"7\">".
+                                        
+                                        $selecUnit 
+                                    ."</select>
+                                </div>
+                            </div>
+
+
+
+
+
+
+                            <div class=\"row\">
+                                <label class=\"col-sm-2 label-on-left\">Data de Nascimento</label>
+                                
+                                <div class=\"col-sm-8\">
+                                    
+                                    <div class=\"form-group label-floating is-empty\">
+                                        <label class=\"control-label\"></label>
+                                        <input type=\"text\" class=\"form-control\" name=\"data_nascimento\" value=\"$datanascimento\" />
+                                    </div>
+                                
+                                </div>
+                            </div>
+
+
+                            <div class=\"row\">
+                                <label class=\"col-sm-2 label-on-left\">Sexo </label>
+                                
+                                <div class=\"col-sm-8\">
+                                    
+                                    <div class=\"form-group label-floating is-empty\">
+                                        <label class=\"control-label\"></label>
+                                        <input type=\"text\" class=\"form-control\" name=\"sexo\" value=\"$funcData->sexo\" placeholder=\"mudar select ou radios \" />
+                                    </div>
+                                
+                                </div>
+                            </div>
+
+                            <div class=\"row\">
+                                <label class=\"col-sm-2 label-on-left\">E-mail</label>
+                                
+                                <div class=\"col-sm-8\">
+                                    
+                                    <div class=\"form-group label-floating is-empty\">
+                                        <label class=\"control-label\"></label>
+                                        <input type=\"text\" class=\"form-control\" name=\"email\" value=\"$funcData->email\" placeholder=\"ex: nome@gmail.com\" />
+                                    </div>
+                                
+                                </div>
+                            </div>
+
+
+                            <div class=\"row\">
+                                <label class=\"col-sm-2 label-on-left\">Telefone </label>
+                                
+                                <div class=\"col-sm-8\">
+                                    
+                                    <div class=\"form-group label-floating is-empty\">
+                                        <label class=\"control-label\"></label>
+                                        <input type=\"text\" class=\"form-control\" name=\"telefone\" value=\"$funcData->telefone\" placeholder=\"Formato (00)00000-0000 \"  />
+                                    </div>
+                                
+                                </div>
+                            </div>
+
+
+                            <div class=\"row\">
+                                <label class=\"col-sm-2 label-on-left\">Celular </label>
+                                
+                                <div class=\"col-sm-8\">
+                                    
+                                    <div class=\"form-group label-floating is-empty\">
+                                        <label class=\"control-label\"></label>
+                                        <input type=\"text\" class=\"form-control\" name=\"celular\" value=\"$funcData->celular\" placeholder=\"Formato (00)00000-0000 \"  />
+                                    </div>
+                                
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <br/>
+                        <br/>
+                    
+
+                    <div class=\"form-group\">
+                        <div class=\"col-md-6 col-sm-6 col-xs-12 col-md-offset-4\">
+                            <button class=\"btn btn-primary\" type=\"reset\">Cancel</button>
+
+                            <button type=\"submit\" class=\"btn btn-rose btn-fill\">Submit</button>
+                        </div>
+                    </div>
+
+                    </form>
+                </div>
+            </div>
+
+        ";      
+    } 
+
+
+
+
+
+
+
+
+
+
+
+
 //criar funcionário
 	public  function CreateFunc()
 	{
 		
+        $units = $this->unidade->All();
+        $selecUnit = "";
+
+        foreach ($units as $unit )
+        {            
+            $selecUnit .= " <option value=\"$unit->id\"> $unit->nome </option> ";
+        }
 
 //        $especialidades = $this->especialidades->All();
         //$select = "";
@@ -501,11 +726,11 @@ class Forms
                                     </div>
                                 </div>
                            
-                            </div>
+                            </div>".
                         
 
 
-                            <div class=\"row\">
+/*                            <div class=\"row\">
                                 
                                 <label class=\"col-sm-2 label-on-left\">Especialidade</label>
 
@@ -516,6 +741,21 @@ class Forms
                                     "</select>
                                 </div>
                             </div>
+*/            
+
+                            "<div class=\"row\">
+                                
+                                <label class=\"col-sm-2 label-on-left\">Unidade</label>
+
+                                <div class=\"col-lg-8 col-md-6 col-sm-3\">
+                                    <select name=\"cod_unidade\" class=\"selectpicker\" data-style=\"select-with-transition\"  data-size=\"7\">".
+                                        
+                                        $selecUnit 
+                                    ."</select>
+                                </div>
+                            </div>
+
+
 
 
 
@@ -616,9 +856,168 @@ class Forms
 
 
 
+public function createSchedule($id){
+    return
+    "<div class=\"col-md-10 col-sm-2 col-md-offset-1 col-sm-offset-0\">
+        <div class=\"card\">
+
+            <form action=\"/agenda/".$id."/store\" method=\"post\" accept-charset=\"utf-8\" class=\"form-horizontal\" >
+                
+
+                <div class=\"card-header card-header-text\" data-background-color=\"rose\">
+                    <h4 class=\"card-title\">Agenda</h4>
+                </div>
+
+                <div class=\"card-content\">
+
+                    <div class=\"row\">
+                        
+                        <label class=\"col-sm-2 label-on-left\">Horário Entrada</label>
+                        <div class=\"col-sm-8\">
+                            <div class=\"form-group label-floating is-empty\">
+                                <input type=\"time\" class=\"form-control\" name=\"hora_entrada\"  />
+                            </div>
+                        </div>
+                    
+                    </div>
+
+                    <div class=\"row\">
+                        
+                        <label class=\"col-sm-2 label-on-left\">Horário Saida</label>
+                        <div class=\"col-sm-8\">
+                            <div class=\"form-group label-floating is-empty\">
+                                <input type=\"time\" class=\"form-control\" name=\"hora_saida\"   />
+                            </div>
+                        </div>
+                    
+                    </div>
+
+                    <div class=\"row\">
+                        
+                        <label class=\"col-sm-2 label-on-left\">Dia Semana</label>
+                        <div class=\"col-lg-8 col-md-6 col-sm-3\">
+                                    <select name=\"dia_semana\" class=\"selectpicker\" data-style=\"select-with-transition\"  data-size=\"7\">
+                                         <option value=\"Segunda \"> Segunda </option> 
+                                         <option value=\"Terça \"> Terça</option> 
+                                         <option value=\"Quarta \"> Quarta</option> 
+                                         <option value=\"Quinta \"> Quinta </option> 
+                                         <option value=\"Sexta \"> Sexta</option> 
+                                         <option value=\"Sábado \"> Sábado</option> 
+                                    </select>
+                                </div>
+                    
+                    </div>
+
+                    <div class=\"row\">
+                        
+                        <label class=\"col-sm-2 label-on-left\">Dia Mês</label>
+                        <div class=\"col-sm-8\">
+                            <div class=\"form-group label-floating is-empty\">
+                                <input type=\"date\"  class=\"form-control\" name=\"dia_mes\"  />
+                            </div>
+                        </div>
+                    
+                    </div>
+
+                </div>
+                <br/>
+                <br/>
+            
+
+            <div class=\"form-group\">
+                <div class=\"col-md-6 col-sm-6 col-xs-12 col-md-offset-4\">
+                    <button class=\"btn btn-primary\" type=\"reset\">Cancel</button>
+
+                    <button type=\"submit\" class=\"btn btn-rose btn-fill\">Submit</button>
+                </div>
+            </div>
+
+            </form>
+        </div>
+    </div>";
+}
 
 
+public function editSchedule($scheduleData){
+    return
+    "<div class=\"col-md-10 col-sm-2 col-md-offset-1 col-sm-offset-0\">
+        <div class=\"card\">
+                    
+            <form action=\"/update/".$scheduleData->id."/Agenda\" method=\"post\" accept-charset=\"utf-8\" class=\"form-horizontal\" >
+                
 
+                <div class=\"card-header card-header-text\" data-background-color=\"rose\">
+                    <h4 class=\"card-title\">Agenda</h4>
+                </div>
+
+                <div class=\"card-content\">
+
+                    <div class=\"row\">
+                        
+                        <label class=\"col-sm-2 label-on-left\">Horário Entrada</label>
+                        <div class=\"col-sm-8\">
+                            <div class=\"form-group label-floating is-empty\">
+                                <input type=\"text\" value=\"$scheduleData->hora_entrada\" class=\"form-control\" name=\"hora_entrada\"  />
+                            </div>
+                        </div>
+                    
+                    </div>
+
+                    <div class=\"row\">
+                        
+                        <label class=\"col-sm-2 label-on-left\">Horário Saida</label>
+                        <div class=\"col-sm-8\">
+                            <div class=\"form-group label-floating is-empty\">
+                                <input type=\"text\" value=\"$scheduleData->hora_saida\" class=\"form-control\" name=\"hora_saida\"   />
+                            </div>
+                        </div>
+                    
+                    </div>
+
+                    <div class=\"row\">
+                        
+                        <label class=\"col-sm-2 label-on-left\">Dia Semana</label>
+                        <div class=\"col-lg-8 col-md-6 col-sm-3\">
+                                    <select name=\"dia_semana\" class=\"selectpicker\" data-style=\"select-with-transition\"  data-size=\"7\">
+                                         <option value=\"Segunda \"> Segunda </option> 
+                                         <option value=\"Terça \"> Terça</option> 
+                                         <option value=\"Quarta \"> Quarta</option> 
+                                         <option value=\"Quinta \"> Quinta </option> 
+                                         <option value=\"Sexta \"> Sexta</option> 
+                                         <option value=\"Sábado \"> Sábado</option> 
+                                    </select>
+                                </div>
+                    
+                    </div>
+
+                    <div class=\"row\">
+                        
+                        <label class=\"col-sm-2 label-on-left\">Dia Mês</label>
+                        <div class=\"col-sm-8\">
+                            <div class=\"form-group label-floating is-empty\">
+                                <input type=\"text\" min=\"1\" value=\"$scheduleData->dia_mes\" max=\"31\" class=\"form-control\" name=\"dia_mes\"  />
+                            </div>
+                        </div>
+                    
+                    </div>
+
+                </div>
+                <br/>
+                <br/>
+            
+
+            <div class=\"form-group\">
+                <div class=\"col-md-6 col-sm-6 col-xs-12 col-md-offset-4\">
+                    <button class=\"btn btn-primary\" type=\"reset\">Cancel</button>
+
+                    <button type=\"submit\" class=\"btn btn-rose btn-fill\">Submit</button>
+                </div>
+            </div>
+
+            </form>
+        </div>
+    </div>";
+}
 
 
 
@@ -737,7 +1136,7 @@ class Forms
                         
 
                         <div class=\"card-header card-header-text\" data-background-color=\"rose\">
-                            <h4 class=\"card-title\">New Serviços</h4>
+                            <h4 class=\"card-title\">Novo Serviço</h4>
                         </div>
 
                         <div class=\"card-content\">

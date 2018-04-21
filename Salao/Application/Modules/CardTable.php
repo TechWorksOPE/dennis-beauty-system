@@ -8,9 +8,9 @@ use Core\BaseTable;
 
 class CardTable
 {
-	public  function buildCardTable($model)
+	public  function buildCardTable($model , $id = null)
 	{
-		$table = BaseTable::faztudo($model);
+		$table = BaseTable::faztudo($model , $id);
 		
 		return 	
 				"	
@@ -19,7 +19,7 @@ class CardTable
 	                    <i class=\"material-icons\">assignment</i>
 	                </div>
 	                <div class=\"card-content\">
-	                    <h4 class=\"card-title\">Agendamentos</h4>
+	                    <h4 class=\"card-title\">$model</h4>
 	                    <div class=\"table-responsive\">
 	                        <table class=\"table\">".
 	                        	$table

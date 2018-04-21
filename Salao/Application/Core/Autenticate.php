@@ -21,6 +21,23 @@ use Core\Container;
 trait Autenticate{
  
 
+  
+
+    public static function setRoute($route){
+        Session::set('lastRoute' , $route);
+    }
+
+
+    public  function setUnit( $id ){
+        $lastRoute = Session::get('lastRoute');
+        Session::set('unit', $id);
+        Redirect::route($lastRoute);
+    }
+
+    public static function getUnidade(){
+        return Session::get('unit');
+    }
+
 
 /** 
 * Comentário de variáveis 

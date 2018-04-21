@@ -12,8 +12,7 @@ class SalaoController extends BaseController
 	
 	use Autenticate;
 
-	protected $agendamentos; 
-	protected $especialidades; 
+	protected $agendamentos;
 	protected $Funcionarios;
 
 
@@ -22,7 +21,6 @@ class SalaoController extends BaseController
 
         parent::__construct();
         $this->agendamentos 	= 	Container::getModel("Agendamento");
-        $this->especialidades 	= 	Container::getModel("Especialidades");
         $this->Funcionarios 	= 	Container::getModel("Funcionarios");
     }
 
@@ -55,19 +53,8 @@ class SalaoController extends BaseController
 
 
 
-//formulário para criar Funcionários
-	public function func()
-	{	
-		$this->setPageTitle("New Funcionário");
-		$this->renderview('Salao/createfunc', "layout");	
-	}
 
-//formulário para criar Especialidades
-	public function especialidades()
-	{
-		$this->setPageTitle("Skills Funcionários");
-		$this->renderview('Salao/createskills', "layout");	
-	}
+
 
 
 
@@ -160,64 +147,6 @@ class SalaoController extends BaseController
 //funcionario e a porra da especialidade
 
 
-
-// método grava Funcionario no banco 
-	public function FuncionarioStore($request)
-	{
-		// notação o select que vem do formulário mesmo que de para marcar vário sempre vai vir o ultimo que vc clico da ordeem do select
-
-
-		$data = [
-
-        	'nome' 					=> $request->post->nome,
-			'cpf'					=> $request->post->cpf,
-			'cod_especialidade'		=> intval($request->post->cod_especialidade),
-			'data_nascimento'		=> date("Y-m-d ", strtotime( $request->post->data_nascimento ) ),
-			'sexo' 					=> $request->post->sexo,
-			'email'					=> $request->post->email,
-			'telefone' 				=> $request->post->telefone,
-			'celular'				=> $request->post->celular,
-		];
-
-		if( $this->Funcionarios->create( $data) )
-		{
-			Redirect::route("/funcionarios", [
-             	'success'=>['criado com sucesso']
-         	]);
-        }
-        else
-        {
-           echo "não ta incluindo porra nenhuma no banco";
-        }
-
-	}
-
-
-
-
-// método grava especialidade no banco 
-	public function EspecialidadeStore($request)
-	{
-		$data = [
-			'title' 				=> $request->post->title,
-			'descricao' 			=> $request->post->descricao,
-			'create_at' 			=> date("Y-m-d H:i:s")
-//			'update_at'				=> date("Y-m-d H:i:s") 
-//			'id_user_last_update'	=> date("Y-m-d H:i:s") 
-
-		];
-
-		if( $this->especialidades->create( $data) )
-		{
-			Redirect::route("/especialidades", [
-             	'success'=>['criado com sucesso']
-         	]);
-        }
-        else
-        {
-           echo "não ta incluindo porra nenhuma no banco";
-        }		
-	}
 
 
 	

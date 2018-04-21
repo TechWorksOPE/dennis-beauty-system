@@ -75,20 +75,44 @@ private $cunt;
 				}						
 			}
 
-			$body .= 
-			"<td>
-				<a href=\"/edit/".$value->id."/".$Route."\" class=\"btn btn-success\">
-                       <i class=\"material-icons\">edit</i>
-            	</a>
-            	<a  href=\"/delete/".$value->id."/".$Route."\"  class=\"btn btn-danger\">
-                        <i class=\"material-icons\">close</i>
-                </a>
-        	</td>";
-
-			$body .='</tr>';
+			if ( $Route == 'Funcionarios') {
+				$body .= 
+				"<td>
+	                <a  href=\"/agenda/".$value->id."/".$Route."\"  class=\"btn\">
+	                        <span>Agendas</span>
+	                </a>
+	                 <a  href=\"/agenda/$value->id\"  class=\"btn\">
+	                        <span>Criar Agenda</span>
+	                </a>
+					<a href=\"/edit/".$value->id."/".$Route."\" class=\"btn btn-success\">
+	                       <i class=\"material-icons\">edit</i>
+	            	</a>
+	            	<a  href=\"/delete/".$value->id."/".$Route."\"  class=\"btn btn-danger\">
+	                        <i class=\"material-icons\">close</i>
+	                </a>
+	        	</td>";
+			}else{
+				$body .= 
+				"<td>
+					<a href=\"/edit/".$value->id."/".$Route."\" class=\"btn btn-success\">
+	                       <i class=\"material-icons\">edit</i>
+	            	</a>
+	            	<a  href=\"/delete/".$value->id."/".$Route."\"  class=\"btn btn-danger\">
+	                        <i class=\"material-icons\">close</i>
+	                </a>
+                </td>";
 			}
 
+			$body .='</tr>';
+		}
+
 		return $body."</tbody>";
+	}
+
+
+	private static function decodeButtons($rows , $Route= null){
+		$buttons = "";
+
 	}
 
 
@@ -97,25 +121,30 @@ private $cunt;
 * @access public
 * @return $table
 */
-	public static function faztudo($model)
+	public static function faztudo($model, $id = null)
 	{
 		if( isset($model)  )
 		{
-			$acounts = Container::getModel($model);
+			$tableModel = Container::getModel($model);
 			
 			switch ($model) {
 				case 'Agendamento':
 
 					$session = Session::get('user');
-					$rows = $acounts->Agendamentos( $session['id'] ); 
+					$rows = $tableModel->Agendamentos( $session['id'] ); 
 				
 					break;
 				case 'Servico':
-					$rows = $acounts->All(); 
+					$rows = $tableModel->All(); 
 
 					break;
+				case 'Funcionarios':
+					$rows = $tableModel->FuncionariosUnit(Session::get('unit')); 
+					break;
 
-				
+				case 'Agenda':
+					$rows = $tableModel->AgendaFunc($id);
+					break;
 				default:
 					# code...
 					break;
